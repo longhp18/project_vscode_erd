@@ -1,0 +1,648 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>hỗ trợ cả 2 hướng ngang-dọc trong cửa sổ kéo.</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter&family=Source+Code+Pro&display=swap">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- My CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+
+</head>
+
+<body ng-app="myApp">
+
+    <div class="main__container">
+        <div class="navMenu">
+            <ul class="navMenu__container">
+                <li class="navMenu__item"><i class="fab fa-centercode"></i></li>
+                <li id="fileItem" onclick="showSubMenu()" onmousedown="hideSubMenu()" class="navMenu__item">
+                    File
+                    <ul id="subMenu" class="subMenu__container">
+                        <li class="subMenu__item">Open</li>
+                        <li class="subMenu__item">Sub Item</li>
+                        <li class="subMenu__item">Sub Item</li>
+                    </ul>
+                </li>
+
+                <li class="navMenu__item" onclick="myFunction()">Edit</li>
+                <li class="navMenu__item" onclick="loadXMLDoc()">Selection</li>
+                <li class="navMenu__item">View</li>
+                <li class="navMenu__item">Go</li>
+                <li class="navMenu__item">Run</li>
+                <li class="navMenu__item">Terminal</li>
+                <li class="navMenu__item">Help</li>
+            </ul>
+        </div>
+
+        <div class="container">
+            <div class="leftMenu">
+                <ul class="leftMenu__container">
+                    <li class="leftMenu__item" onclick="leftElmtShowHide()"><i class="far fa-copy"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-search"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-code-branch"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-bug"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-cubes"></i></li>
+                </ul>
+            </div>
+            <div id="leftElmt" class="container__left">
+                <div class="listTable">
+                    <h5>Danh Sách Bảng</h5>
+                    <ul id="listTable">
+
+                    </ul>
+                </div>
+
+            </div>
+
+
+            <!-- chỉ ra hướng phân tách cho từng bộ thay đổi(đường phân tách dọc) -->
+            <div class="resizer" data-direction="horizontal"></div>
+
+            <div class="container__right">
+                <!-- // tạo các phần tử -->
+                <div id="container__top" class="container__top">
+                    <div id="myTable" class="myTable">
+                        <h5 id="nameTable"></h5>
+                        <div id="dataTable" class="myTable_container">
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="resizer" data-direction="vertical"></div>
+                <div class="container__bottom">
+                    <div class="bottomMenu">
+                        <div class="bottomMenu__container">
+                            <ul class="bottomMenu__left">
+                                <li class="bottomMenuLeft__item">Problems</li>
+                                <li class="bottomMenuLeft__item" href="#!output">Output</li>
+                                <li class="bottomMenuLeft__item" href="#!terminal">Terminal</li>
+                                <li class="bottomMenuLeft__item" href="#!debugconsole">Debug Console</li>
+                            </ul>
+                            <ul class="bottomMenu__right">
+                                <li class="bottomMenuRight__item"><i class="fas fa-sliders-h"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-unlock"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-angle-up"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-times"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="statusBar">
+            <div class="statusBar__container">
+                <ul class="statusBar__left">
+                    <li class="sttBar__item"><i class="far fa-times-circle"></i></li>
+                    <li class="sttBar__item"><i class="fas fa-exclamation-triangle"></i></li>
+                </ul>
+                <ul class="statusBar__right">
+                    <li class="sttBar__item "><input type="range" id="rangScale" onchange="rangScale()" value=""
+                            min="50" max="100"></li>
+                    <li id="locationX" class="sttBar__item location">x:</li>
+                    <li id="locationY" class="sttBar__item location">y:</li>
+
+                    <li class="sttBar__item">UTF-8</li>
+                    <li class="sttBar__item">HTML</li>
+                    <li class="sttBar__item"><i class="fas fa-globe"></i> Go Live</li>
+                    <li class="sttBar__item"><i class="far fa-comment-dots"></i></li>
+                    <li class="sttBar__item"><i class="far fa-bell"></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const resizable = function (resizer) {
+                //truy xuất thuộc tính từ phần tử resizer, làm thanh dọc này kéo đc:
+                const direction = resizer.getAttribute('data-direction') || 'horizontal';
+                const prevSibling = resizer.previousElementSibling;
+                const nextSibling = resizer.nextElementSibling;
+
+                // The current position of mouse
+                let x = 0;
+                let y = 0;
+                let prevSiblingHeight = 0;
+                let prevSiblingWidth = 0;
+
+                // Xử lý sự kiện mousedown
+                // được kích hoạt khi người dùng kéo bộ chỉnh sửa
+                const mouseDownHandler = function (e) {
+                    // Lấy vị trí chuột hiện tại
+                    x = e.clientX;
+                    y = e.clientY;
+                    const rect = prevSibling.getBoundingClientRect();
+                    prevSiblingHeight = rect.height;
+                    prevSiblingWidth = rect.width;
+
+                    // Lắng nghe chuyển động của mouse
+                    //Đính kèm Listener vào `document`
+                    document.addEventListener('mousemove', mouseMoveHandler);
+                    document.addEventListener('mouseup', mouseUpHandler);
+                };
+
+                //cập nhật con trỏ của công cụ:
+                const mouseMoveHandler = function (e) {
+                    //xác định khoảng cách con chuột đã được di chuyển 
+                    const dx = e.clientX - x;
+                    const dy = e.clientY - y;
+
+                    switch (direction) {
+                        case 'vertical':
+                            //Chiều cao của các cạnh được đặt dựa trên số phần trăm chiều cao của parent.
+                            const h = (prevSiblingHeight + dy) * 100 / resizer.parentNode
+                                .getBoundingClientRect().height;
+                            prevSibling.style.height = `${h}%`;
+                            break;
+                        case 'horizontal':
+                        default:
+                            //Chiều rộng của các cạnh được đặt dựa trên số phần trăm chiều rộng của parent.
+                            const w = (prevSiblingWidth + dx) * 100 / resizer.parentNode
+                                .getBoundingClientRect().width;
+                            prevSibling.style.width = `${w}%`;
+                            break;
+                    }
+
+                    const cursor = direction === 'horizontal' ? 'col-resize' : 'row-resize';
+                    // đặt con trỏ cho toàn bộ trang.  //nếu k sẽ thấy màn hình nhấp nháy do con trỏ được thay đổi liên tục. k có cố định.
+                    resizer.style.cursor = cursor;
+                    document.body.style.cursor = cursor;
+
+                    //ngăn các sự kiện chuột và lựa chọn văn bản ở cả hai bên :giá trị none.
+                    prevSibling.style.userSelect = 'none';
+                    prevSibling.style.pointerEvents = 'none';
+
+                    nextSibling.style.userSelect = 'none';
+                    nextSibling.style.pointerEvents = 'none';
+                };
+
+                const mouseUpHandler = function () {
+                    resizer.style.removeProperty('cursor');
+                    document.body.style.removeProperty('cursor');
+
+                    prevSibling.style.removeProperty('user-select');
+                    prevSibling.style.removeProperty('pointer-events');
+
+                    nextSibling.style.removeProperty('user-select');
+                    nextSibling.style.removeProperty('pointer-events');
+
+                    // loại bỏ các trình xử lý của `mousemove` và `mouseup`:
+                    document.removeEventListener('mousemove', mouseMoveHandler);
+                    document.removeEventListener('mouseup', mouseUpHandler);
+                };
+
+                //  Đính kèm trình xử lý
+                resizer.addEventListener('mousedown', mouseDownHandler);
+            };
+
+            // Truy vấn tất cả các công cụ thay đổi kích thước:
+            document.querySelectorAll('.resizer').forEach(function (ele) {
+                resizable(ele);
+            });
+        });
+    </script>
+    <!-- My JS -->
+    <script src="js/app.js"></script>
+    <script src="js/app_dragdrop.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        window.onload = function () {
+
+            var locationX = localStorage.getItem('locationX');
+            var locationY = localStorage.getItem('locationY');
+            var myTable = document.getElementById('myTable');
+            if (locationX != "null" && locationX != "undefined" && locationY != "null" && locationY !=
+                "undefined") {
+                myTable.style.top = locationX;
+                myTable.style.left = locationY;
+                document.getElementById("locationX").innerHTML = 'x: ' + locationX;
+                document.getElementById("locationY").innerHTML = 'y: ' + locationY;
+            } else {
+                myTable.style.top = '0px';
+                myTable.style.left = '0px';
+            }
+            var value_rangScale = localStorage.getItem('rangScale');
+
+            var rangScale = document.getElementById('rangScale');
+            var myTable = document.getElementById('myTable');
+
+            rangScale.value = value_rangScale;
+            myTable.style.transform = 'scale(' + value_rangScale + '%)';
+        }
+    </script>
+
+    <script>
+        function rangScale() {
+            var rangScale = document.getElementById('rangScale').value;
+            var myTable = document.getElementById('myTable');
+            myTable.style.transform = 'scale(' + rangScale + '%)';
+
+            localStorage.setItem('rangScale', rangScale);
+        }
+
+    </script>
+    <script>
+        var url_sakai = 'https://sakai-db.myworkspace.vn/api/db/common/inspect?schema_name=sakai';
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                data: {
+
+                },
+                url: url_sakai,
+                success: function (data) {
+                    console.log("Get Success");
+
+
+                    Object.keys(data['sakai']).forEach(function (key) {
+                        var dataTable = data['sakai'][key];
+                        document.getElementById('listTable').innerHTML += '<li>' + key + '</li>';
+                    });
+
+                    var dataTable = data['sakai']['announcement_message'];
+                    for (i = 0; i <= dataTable.length; i++) {
+
+                        document.getElementById('dataTable').innerHTML += '<div class="dataItem">' + '<p>' + 'Name: ' + dataTable[i].name + '</p>' + '<hr  class="hr">' + '<p>' + 'Type: ' + dataTable[i].type + '</p>' + '</div>';
+                    }
+                }
+            });
+        });
+    </script>
+
+    <!-- code đọc file xml trên console trình duyệt.     -->
+    <script>
+        function myFunction() {
+            var person = prompt("CLICK OK", "doc xml");
+            var xhttp = new XMLHttpRequest();
+            // var domParser = new DOMParser ();
+            var xmlDocument = domParser.parseFromString(xmlString, "text/xml");
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseXML);
+                }
+            };
+
+            xhttp.open("GET", "02_Vertical_Container.xml", true);
+            xhttp.send();
+        }
+    </script>
+
+    <p id="demo"></p>
+
+
+    <!-- parse(phân tích) nội dung xml thành đối tượng trong javascript ..     -->
+    <p id="demo"></p>
+    <script>
+        var xmlString = "02_Vertical_Container.xml";
+
+        var domParser = new DOMParser();
+
+        var xmlDocument = domParser.parseFromString(xmlString, "text/xml");
+
+        document.getElementById("demo").innerHTML = xmlDocument.getElementsByTagName("mxGeometry")[0].childNodes[0].nodeValue;
+        console.log(xmlDocument);
+    </script>
+
+    =======
+    <div class="main__container">
+        <div class="navMenu">
+            <ul class="navMenu__container">
+                <li class="navMenu__item"><i class="fab fa-centercode"></i></li>
+                <li id="fileItem" onclick="showSubMenu()" onmousedown="hideSubMenu()" class="navMenu__item">
+                    File
+                    <ul id="subMenu" class="subMenu__container">
+                        <li class="subMenu__item">Open</li>
+                        <li class="subMenu__item">Sub Item</li>
+                    </ul>
+                </li>
+                <li class="navMenu__item">Edit</li>
+                <li class="navMenu__item">Selection</li>
+                <li class="navMenu__item">View</li>
+                <li class="navMenu__item">Go</li>
+                <li class="navMenu__item">Run</li>
+                <li class="navMenu__item">Terminal</li>
+                <li class="navMenu__item">Help</li>
+            </ul>
+        </div>
+        <div class="container">
+            <div class="leftMenu">
+                <ul class="leftMenu__container">
+                    <li class="leftMenu__item" onclick="leftElmtShowHide()"><i class="far fa-copy"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-search"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-code-branch"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-bug"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-cubes"></i></li>
+                </ul>
+            </div>
+            <div id="leftElmt" class="container__left">
+                <div class="listTable">
+                    <h5>Danh Sách Bảng</h5>
+                    <ul id="listTable">
+                    </ul>
+                </div>
+            </div>
+            <!-- chỉ ra hướng phân tách cho từng bộ thay đổi(đường phân tách dọc) -->
+            <div class="resizer" data-direction="horizontal"></div>
+            <div class="container__right">
+                <!-- // tạo các phần tử -->
+                <div id="container__top" class="container__top">
+                    <div id="myTable" class="myTable">
+                        <h5 id="nameTable"></h5>
+                        <div id="dataTable" class="myTable_container">
+                        </div>
+                    </div>
+                </div>
+                <div class="resizer" data-direction="vertical"></div>
+                <div class="container__bottom">
+                    <div class="bottomMenu">
+                        <div class="bottomMenu__container">
+                            <ul class="bottomMenu__left">
+                                <li class="bottomMenuLeft__item">Problems</li>
+                                <li class="bottomMenuLeft__item" href="#!output">Output</li>
+                                <li class="bottomMenuLeft__item" href="#!terminal">Terminal</li>
+                                <li class="bottomMenuLeft__item" href="#!debugconsole">Debug Console</li>
+                            </ul>
+                            <ul class="bottomMenu__right">
+                                <li class="bottomMenuRight__item"><i class="fas fa-sliders-h"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-unlock"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-angle-up"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-times"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="statusBar">
+            <div class="statusBar__container">
+                <ul class="statusBar__left">
+                    <li class="sttBar__item"><i class="far fa-times-circle"></i></li>
+                    <li class="sttBar__item"><i class="fas fa-exclamation-triangle"></i></li>
+                </ul>
+                <ul class="statusBar__right">
+                    <li class="sttBar__item "><input type="range" id="rangScale" onchange="rangScale()" value=""
+                            min="50" max="100"></li>
+                    <li id="locationX" class="sttBar__item location">x:</li>
+                    <li id="locationY" class="sttBar__item location">y:</li>
+
+                    <li class="sttBar__item">UTF-8</li>
+                    <li class="sttBar__item">HTML</li>
+                    <li class="sttBar__item"><i class="fas fa-globe"></i> Go Live</li>
+                    <li class="sttBar__item"><i class="far fa-comment-dots"></i></li>
+                    <li class="sttBar__item"><i class="far fa-bell"></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const resizable = function (resizer) {
+                //truy xuất thuộc tính từ phần tử resizer, làm thanh dọc này kéo đc:
+                const direction = resizer.getAttribute('data-direction') || 'horizontal';
+                const prevSibling = resizer.previousElementSibling;
+                const nextSibling = resizer.nextElementSibling;
+
+                // The current position of mouse
+                let x = 0;
+                let y = 0;
+                let prevSiblingHeight = 0;
+                let prevSiblingWidth = 0;
+
+                // Xử lý sự kiện mousedown
+                // được kích hoạt khi người dùng kéo bộ chỉnh sửa
+                const mouseDownHandler = function (e) {
+                    // Lấy vị trí chuột hiện tại
+                    x = e.clientX;
+                    y = e.clientY;
+                    const rect = prevSibling.getBoundingClientRect();
+                    prevSiblingHeight = rect.height;
+                    prevSiblingWidth = rect.width;
+
+                    // Lắng nghe chuyển động của mouse
+                    //Đính kèm Listener vào `document`
+                    document.addEventListener('mousemove', mouseMoveHandler);
+                    document.addEventListener('mouseup', mouseUpHandler);
+                };
+
+                //cập nhật con trỏ của công cụ:
+                const mouseMoveHandler = function (e) {
+                    //xác định khoảng cách con chuột đã được di chuyển 
+                    const dx = e.clientX - x;
+                    const dy = e.clientY - y;
+
+                    switch (direction) {
+                        case 'vertical':
+                            //Chiều cao của các cạnh được đặt dựa trên số phần trăm chiều cao của parent.
+                            const h = (prevSiblingHeight + dy) * 100 / resizer.parentNode
+                                .getBoundingClientRect().height;
+                            prevSibling.style.height = `${h}%`;
+                            break;
+                        case 'horizontal':
+                        default:
+                            //Chiều rộng của các cạnh được đặt dựa trên số phần trăm chiều rộng của parent.
+                            const w = (prevSiblingWidth + dx) * 100 / resizer.parentNode
+                                .getBoundingClientRect().width;
+                            prevSibling.style.width = `${w}%`;
+                            break;
+                    }
+
+                    const cursor = direction === 'horizontal' ? 'col-resize' : 'row-resize';
+                    // đặt con trỏ cho toàn bộ trang.  //nếu k sẽ thấy màn hình nhấp nháy do con trỏ được thay đổi liên tục. k có cố định.
+                    resizer.style.cursor = cursor;
+                    document.body.style.cursor = cursor;
+
+                    //ngăn các sự kiện chuột và lựa chọn văn bản ở cả hai bên :giá trị none.
+                    prevSibling.style.userSelect = 'none';
+                    prevSibling.style.pointerEvents = 'none';
+
+                    nextSibling.style.userSelect = 'none';
+                    nextSibling.style.pointerEvents = 'none';
+                };
+
+                const mouseUpHandler = function () {
+                    resizer.style.removeProperty('cursor');
+                    document.body.style.removeProperty('cursor');
+
+                    prevSibling.style.removeProperty('user-select');
+                    prevSibling.style.removeProperty('pointer-events');
+
+                    nextSibling.style.removeProperty('user-select');
+                    nextSibling.style.removeProperty('pointer-events');
+
+                    // loại bỏ các trình xử lý của `mousemove` và `mouseup`:
+                    document.removeEventListener('mousemove', mouseMoveHandler);
+                    document.removeEventListener('mouseup', mouseUpHandler);
+                };
+
+                //  Đính kèm trình xử lý
+                resizer.addEventListener('mousedown', mouseDownHandler);
+            };
+
+            // Truy vấn tất cả các công cụ thay đổi kích thước:
+            document.querySelectorAll('.resizer').forEach(function (ele) {
+                resizable(ele);
+            });
+        });
+    </script>
+    <!-- My JS -->
+    <script src="js/app.js"></script>
+    <script src="js/app_dragdrop.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        window.onload = function () {
+
+            var locationX = localStorage.getItem('locationX');
+            var locationY = localStorage.getItem('locationY');
+            var myTable = document.getElementById('myTable');
+            if (locationX != "null" && locationX != "undefined" && locationY != "null" && locationY !=
+                "undefined") {
+                myTable.style.top = locationX;
+                myTable.style.left = locationY;
+                document.getElementById("locationX").innerHTML = 'x: ' + locationX;
+                document.getElementById("locationY").innerHTML = 'y: ' + locationY;
+            } else {
+                myTable.style.top = '0px';
+                myTable.style.left = '0px';
+            }
+            var value_rangScale = localStorage.getItem('rangScale');
+
+            var rangScale = document.getElementById('rangScale');
+            var myTable = document.getElementById('myTable');
+
+            rangScale.value = value_rangScale;
+            myTable.style.transform = 'scale(' + value_rangScale + '%)';
+        }
+    </script>
+
+    <script>
+        function rangScale() {
+            var rangScale = document.getElementById('rangScale').value;
+            var myTable = document.getElementById('myTable');
+            myTable.style.transform = 'scale(' + rangScale + '%)';
+
+            localStorage.setItem('rangScale', rangScale);
+        }
+
+    </script>
+    <script>
+        var url_sakai = 'https://sakai-db.myworkspace.vn/api/db/common/inspect?schema_name=sakai';
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                data: {
+
+                },
+                url: url_sakai,
+                success: function (data) {
+                    console.log("Get Success");
+
+
+                    Object.keys(data['sakai']).forEach(function (key) {
+                        var dataTable = data['sakai'][key];
+                        document.getElementById('listTable').innerHTML += '<li>' + key + '</li>';
+                    });
+
+                    var dataTable = data['sakai']['announcement_message'];
+                    for (i = 0; i <= dataTable.length; i++) {
+
+                        document.getElementById('dataTable').innerHTML += '<div class="dataItem">' + '<p>' + 'Name: ' + dataTable[i].name + '</p>' + '<hr  class="hr">' + '<p>' + 'Type: ' + dataTable[i].type + '</p>' + '</div>';
+                    }
+                }
+            });
+        });
+    </script>
+
+    <!-- code đọc file xml trên console trình duyệt.     -->
+    <script>
+        function myFunction() {
+            var person = prompt("CLICK OK", "doc xml");
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseXML);
+                }
+            };
+
+            xhttp.open("GET", "02_Vertical_Container.xml", true);
+            xhttp.send();
+        }
+    </script>
+
+    <!-- parse(phân tích) nội dung xml thành đối tượng trong javascript ..     -->
+    <p id="demo"></p>
+    <script>
+        var xmlString = "02_Vertical_Container.xml";
+
+        var domParser = new DOMParser();
+
+        var xmlDocument = domParser.parseFromString(xmlString, "text/xml");
+
+        document.getElementById("demo").innerHTML = xmlDocument.getElementsByTagName("mxGeometry")[0].childNodes[0].nodeValue;
+        console.log(xmlDocument);
+    </script>
+    <!-- 
+<script>
+var obj = {name: "Super", Surname: "Man", age: 23};
+>>>>>>> 329cbf9a51605d09cf1c66ccbb67b212ce9c632b
+
+<script>
+    window.parseXml(
+ <mxfile host="Electron" modified="2021-06-16T05:32:25.707Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/14.6.13 Chrome/89.0.4389.128 Electron/12.0.7 Safari/537.36" etag="qkmA8XWGlLFFk0VXwLOL" version="14.6.13" type="device">
+  <diagram id="NJNpc5mABo9xSiG1-kW2" name="Page-1">
+    <mxGraphModel dx="1086" dy="806" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="D8fePtvSVx4TYlcnGgNE-1" value="Table ABC" style="swimlane;" vertex="1" parent="1">
+          <mxGeometry x="320" y="310" width="200" height="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>   )
+</script>
+
+<script>
+    fetch('/02_Vertical_Container.xml')
+    .then(data=> data.json())
+    .then(data => {
+        console.log(data);   
+    })
+    .catch(error => {
+        console.log(error);
+    })
+</script>
+
+<<<<<<< HEAD
+<script>
+    var x2js = new X2JS();
+    var xmlText = "<MyRoot> <test>Success</test> <test2><item>val1</item> <item>val2</item></test2> </MyRoot>";
+    var jsonObj = x2js.xml_str2json( xmlText );
+    console.log(xmlText);
+    </script>
+=======
+>>>>>>> 329cbf9a51605d09cf1c66ccbb67b212ce9c632b
+
+
+
+
+
+</body>
+
+</html>

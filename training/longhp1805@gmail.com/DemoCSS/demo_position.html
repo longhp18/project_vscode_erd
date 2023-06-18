@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <style>
+        .container {
+            width: 200px;
+            height: 200px;
+            border: 2px solid black;
+            position: absolute;
+            right: 0;
+            z-index: 0;
+        }
+
+        .fa-coffee,
+        .fa-sun,
+        .fa-car {
+            font-size: 128px;
+        }
+
+        .fa-coffee {
+            position: absolute;
+            color: blue;
+            z-index: 1;
+        }
+
+        .fa-sun {
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: red;
+            z-index: 2;
+        }
+
+        body {
+            position: relative;
+        }
+
+        #myCar {
+            position: absolute;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="myContainer" ondrag="getId(this.id)" class="container">
+        <i id="myCoffee" ondrag="getId(this.id)" class="fas fa-coffee"></i>
+        <i id="mySun" ondrag="getId(this.id)" class="fas fa-sun"></i>
+    </div>
+    <div id="myCar">
+        <i class="fas fa-car"></i>
+    </div>
+</body>
+
+<script>
+    function getId(clicked_id) {
+            console.log(clicked_id)
+            if(clicked_id == mySun) {
+                dragElement(document.getElementById("myCoffee"));
+            }else {
+                dragElement(document.getElementById("myContainer"));
+            }
+            
+        }
+
+    /* 
+    dragElement(document.getElementById("myContainer"));
+    dragElement(document.getElementById("myCoffee"));
+    dragElement(document.getElementById("mySun"));
+    
+
+    */
+    dragElement(document.getElementById("myCar"));
+
+    function dragElement(elmnt) {
+        var pos1 = 0,
+            pos2 = 0,
+            pos3 = 0,
+            pos4 = 0;
+        if (document.getElementById(elmnt.id)) {
+            document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+
+            console.log('pos3=' + pos3);
+            console.log('pos4=' + pos4);
+            console.log('e.clientX=' + e.clientX);
+            console.log('e.clientY=' + e.clientY);
+
+            document.onmouseup = closeDragElement;
+
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+            console.log('elmnt.style.top=' + elmnt.style.top);
+            console.log('elmnt.style.left=' + elmnt.style.left);
+        }
+
+        function closeDragElement() {
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+</script>
+
+</html>

@@ -1,0 +1,682 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.main__container {
+    width: 100vw;
+    box-sizing: content-box;
+    min-width: 580px;
+    position: fixed;
+    font-family: 'Poppins', sans-serif;
+}
+
+.container {
+    display: flex;
+    /* Để đặt các phần tử bên trái, bộ chỉnh lại và bên phải trong cùng một hàng.
+    /* Khác */
+    /* Misc */
+    height: 100vh;
+    width: 100%;
+    position: relative;
+}
+
+.resizer[data-direction="horizontal"] {
+    background-color: #ced6e0;
+    cursor: ew-resize;
+    height: 100%;
+    width: 2px;
+}
+
+.resizer[data-direction="vertical"] {
+    background-color: #cbd5e0;
+    cursor: ns-resize;
+    height: 1px;
+    width: 100%;
+
+}
+
+.container__left {
+    /* Initially, the left takes 1/4 width */
+    width: 12%;
+    height: 100%;
+    min-width: 12%;
+    max-width: 30%;
+    background: #dcdde1;
+    /* Misc */
+    box-sizing: content-box;
+}
+
+.listTable {
+    width: 100%;
+    height: 96%;
+    background: #f1f2f6;
+    box-sizing: border-box;
+    overflow-x: scroll;
+}
+
+.listTable::-webkit-scrollbar {
+    width: 9px;
+    height: 100%;
+    background: transparent;
+}
+
+.listTable::-webkit-scrollbar-thumb {
+    background: #6a89cc;
+    width: 7px;
+    border-radius: 7px;
+}
+
+.listTable::-webkit-scrollbar-button {
+    display: none;
+}
+
+.listTable h5 {
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+    font-size: 15px;
+    z-index: 15;
+}
+
+.listTable ul {
+    width: 96%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.listTable ul li {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    background: white;
+
+    cursor: pointer;
+    text-align: left;
+    overflow: hidden;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #6a89cc;
+    padding: 0px 5px 0px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    text-overflow: ellipsis;
+    font-weight: 500;
+}
+
+.listTable li:hover {
+    transition: all 0.3s ease;
+    color: white;
+    background: #6a89cc;
+    box-shadow: 0px 5px 10px #ddd;
+}
+
+.container__right {
+    /* Take the remaining width */
+    flex: 1;
+
+    /* Misc */
+
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.container__top {
+    /* Initial height */
+    width: 100%;
+    height: 70%;
+    /* Misc */
+    position: relative;
+}
+
+#contentTable {
+    overflow: scroll;
+}
+
+.container__top::-webkit-scrollbar {
+    width: 9px;
+    height: 100%;
+    background: transparent;
+}
+
+.container__top::-webkit-scrollbar-thumb {
+    background: #6a89cc;
+    width: 7px;
+    border-radius: 7px;
+}
+
+.container__top::-webkit-scrollbar-button {
+    display: none;
+}
+
+.container__bottom {
+    /* Take the remaining height */
+    flex: 1;
+    z-index: 2;
+    /* Misc */
+    display: flex;
+    width: 100%;
+}
+
+.bottomMenu {
+    width: 100%;
+    background-color: #2f3542;
+}
+
+.bottomMenu__container {
+    width: 100%;
+    height: 30px;
+}
+
+.bottomMenu__left {
+    float: left;
+}
+
+.bottomMenu__right {
+    float: right;
+}
+
+.bottomMenuLeft__item {
+    line-height: 30px;
+    font-size: 12px;
+    list-style: none;
+    float: left;
+    padding: 0px 10px 0px 10px;
+    text-transform: uppercase;
+    color: #747d8c;
+}
+
+.bottomMenuLeft__item:hover {
+    border-bottom: 1px solid#747d8c;
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+}
+
+.navMenu__item {}
+
+
+.bottomMenuRight__item {
+    margin: 3px;
+    width: 24px;
+    line-height: 24px;
+    border-radius: 3px;
+    font-size: 12px;
+    transform: 0.3s;
+    list-style: none;
+    float: left;
+    text-align: center;
+    text-transform: uppercase;
+    color: rgba(189, 195, 199, 1.0);
+}
+
+.bottomMenuRight__item:hover {
+    background-color: rgba(127, 140, 141, 0.5);
+}
+
+.bottomView {
+    color: white;
+}
+
+.navMenu {
+    width: 100%;
+    height: 30px;
+    background-color: #2d3436;
+    color: white;
+}
+
+.navMenu__container {
+    width: 100%;
+    min-width: 580px;
+}
+
+.navMenu__item:nth-child(1) {
+    width: 58px;
+    list-style: none;
+    float: left;
+    padding: 0;
+    text-align: center;
+    line-height: 30px;
+    color: rgba(52, 152, 219, 1.0);
+}
+
+.navMenu__item {
+    list-style: none;
+    float: left;
+    line-height: 30px;
+    padding: 0px 14px 0px 14px;
+    font-size: 13px;
+}
+
+.navMenu__item:hover {
+    background: rgba(30, 39, 46, 1.0);
+}
+
+.leftMenu {
+    width: 58px;
+    height: 100%;
+    background: rgba(45, 52, 54, 1);
+    color: rgba(178, 190, 195, 1.0);
+    position: relative;
+    float: left;
+    z-index: 10;
+    display: block;
+}
+
+.leftMenu__container {
+    text-align: center;
+}
+
+.leftMenu__item {
+    width: 58px;
+    height: 58px;
+    line-height: 58px;
+    font-size: 25px;
+    list-style: none;
+}
+
+.leftMenu__item:nth-child(2) {
+    transform: rotate(90deg);
+    width: 58px;
+    height: 58px;
+    line-height: 58px;
+    font-size: 25px;
+    list-style: none;
+}
+
+.leftMenu__item:hover {
+    background: rgba(30, 39, 46, 1.0);
+}
+
+.myTable {
+    min-width: 200px;
+    max-width: 300px;
+    position: absolute;
+    font-weight: bold;
+    cursor: move;
+    box-shadow: 0px 2px 5px #AAA;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.myTable_container {
+    width: 100%;
+    padding: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+hr {
+    width: 94%;
+    margin: auto;
+    background-color: #AAA;
+    color: #aaa;
+}
+
+.nameTable {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    color: #fff;
+    font-size: 13px;
+}
+
+.myTable p {
+    padding: 5px;
+    font-size: 12px;
+}
+
+.dataItem {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #f1f2f6;
+    margin-top: 7px;
+    border-radius: 7px;
+}
+
+.subMenu__container {
+    width: 10rem;
+    position: absolute;
+    background: rgba(30, 39, 46, 1.0);
+    padding: 10px;
+    margin-left: -14px;
+    border-radius: 0px 5px 5px 5px;
+    z-index: 999;
+    display: none;
+}
+
+.newTable {
+    width: 200px;
+    position: absolute;
+    font-weight: bold;
+    cursor: move;
+    padding: 10px 5px 10px;
+    box-shadow: 0px 2px 5px #AAA;
+    border-radius: 5px;
+    background-color: #fff;
+}
+
+.subMenu__item {
+    width: 100%;
+    list-style: none;
+    color: white;
+    display: block;
+    padding: 5px;
+    margin-left: -5px;
+
+}
+
+.subMenu__item:hover {
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.statusBar {
+    width: 100%;
+    height: 25px;
+    background: #182C61;
+    position: fixed;
+    z-index: 19;
+    bottom: 0;
+
+}
+
+.statusBar li {
+    list-style: none;
+}
+
+.statusBar__container {
+    width: 98%;
+    height: 25px;
+    line-height: 25px;
+    margin: auto;
+
+}
+
+.statusBar__left {
+    float: left;
+}
+
+.statusBar__right {
+    width: auto;
+    float: right;
+}
+
+.statusBar[input=range]::-webkit-slider-thumb {
+    background: #6a89cc;
+}
+
+.sttBar__item {
+    line-height: 12.5px;
+    font-size: 12.5px;
+    padding: 5px;
+    display: inline-table;
+    color: #bdc3c7;
+    text-align: center;
+}
+
+.location {
+    width: auto;
+}
+
+.sttBar__item:hover {
+    background: black;
+    border-radius: 2px;
+    transition: 0.2s;
+}
+
+
+
+#listTable .list-item {
+    width: 100%;
+    height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    border: none;
+    border-radius: 10px;
+    margin-top: 5px;
+    padding-left: 5px;
+    background: white;
+    color: #6a89cc;
+    font-weight: 600;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#listTable .list-item:hover {
+    background-color: #6a89cc;
+    color: #fff;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    position: absolute;
+    background-color: #6a89cc;
+    opacity: 0.5;
+    display: none;
+}
+
+/* .myTable:hover .dot {
+    display: block;
+    transition: 0.4s ease-in-out;
+} */
+
+.menuTable:hover .submenuTable {
+    transform: scale(1);
+    transition: transform 100ms ease-in-out;
+}
+
+.dot0 {
+    left: 0;
+    top: 0;
+}
+
+.dot1 {
+    left: 50%;
+    top: 0;
+}
+
+.dot2 {
+    right: 0;
+    top: 0;
+}
+
+.dot3 {
+    right: 0;
+    top: 50%;
+}
+
+.dot4 {
+    right: 0;
+    bottom: 0;
+}
+
+.dot5 {
+    left: 50%;
+    bottom: 0;
+}
+
+.dot6 {
+    left: 0;
+    bottom: 0;
+}
+
+.dot7 {
+    left: 0;
+    top: 50%;
+}
+
+#contextMenu {
+    z-index: 10000;
+    width: 150px;
+    height: 120px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    transform: scale(0);
+    transform-origin: top left;
+    font-size: 12px;
+    padding: 10px 7px;
+    border-radius: 15px;
+}
+
+#contextMenu {
+    border-radius: 10px;
+}
+
+#contextMenu.active {
+    transform: scale(1);
+    transition: transform 100ms ease-in-out;
+}
+
+.contextMenu-item {
+    width: 100%;
+    height: 40px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border-radius: 10px;
+}
+
+.contextMenu-item i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    font-size: 13px;
+    transform-origin: left right;
+}
+
+.contextMenu-text {
+    flex: 1;
+}
+
+.contextMenu-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+@supports ((-webkit-backdrop-filter: blur(7px)) or (backdrop-filter: blur(7px))) {
+    .backdrop-blur {
+        background-color: rgba(0, 0, 0, .5);
+        -webkit-backdrop-filter: blur(7px);
+        backdrop-filter: blur(7px);
+    }
+}
+
+
+.headerTable {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #4b6584;
+    padding: 7px;
+    position: relative;
+    border-radius: 10px 10px 0 0;
+}
+
+.btn-close {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-radius: 100%;
+    justify-content: flex-start;
+    color: white;
+}
+
+.btn-close i {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    background-color: #e74c3c;
+    border-radius: 100%;
+    justify-content: center;
+    color: white;
+}
+
+.btn-close i:hover {
+    transition: all 0.2s ease-in-out;
+    background-color: #c0392b;
+}
+
+.nameTable {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menuTable {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-radius: 100%;
+    justify-content: flex-end;
+    color: white;
+}
+
+.submenuTable {
+    z-index: 10000;
+    width: 150px;
+    position: absolute;
+    color: white;
+    right: -140px;
+    top: 20px;
+    transform: scale(0);
+    transform-origin: top left;
+    font-size: 12px;
+    padding: 10px 7px;
+    border-radius: 15px;
+}
+
+.submenuTable.active {
+    transform: scale(1);
+    transition: transform 100ms ease-in-out;
+}
+
+.menuTable i {
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    background-color: #34495e;
+    border-radius: 100%;
+    justify-content: center;
+    color: white;
+}
+
+.menuTable i:hover {
+    transition: all 0.2s ease-in-out;
+    background-color: #2c3e50;
+}

@@ -1,0 +1,407 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Data Importer/Exporter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter&family=Source+Code+Pro&display=swap">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- My CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+
+</head>
+
+<body ng-app="myApp">
+    <div class="main__container">
+        <div class="navMenu">
+            <ul class="navMenu__container">
+                <li class="navMenu__item"><i class="fab fa-centercode"></i></li>
+                <li id="fileItem" onclick="showSubMenu()" onmousedown="hideSubMenu()" class="navMenu__item">
+                    File
+                    <ul id="subMenu" class="subMenu__container">
+                        <li class="subMenu__item">Open</li>
+                        <li class="subMenu__item">Sub Item</li>
+                    </ul>
+                </li>
+
+                <li class="navMenu__item">Edit</li>
+                <li class="navMenu__item">Selection</li>
+                <li class="navMenu__item">View</li>
+                <li class="navMenu__item">Go</li>
+                <li class="navMenu__item">Run</li>
+                <li class="navMenu__item">Terminal</li>
+                <li class="navMenu__item">Help</li>
+            </ul>
+        </div>
+
+        <div class="container">
+            <div class="leftMenu">
+                <ul class="leftMenu__container">
+                    <li class="leftMenu__item" onclick="leftElmtShowHide()"><i class="far fa-copy"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-search"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-code-branch"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-bug"></i></li>
+                    <li class="leftMenu__item"><i class="fas fa-cubes"></i></li>
+                </ul>
+            </div>
+            <div id="leftElmt" class="container__left">
+                <div class="listTable">
+                    <h5>Danh Sách Bảng</h5>
+                    <ul id="listTable">
+
+                    </ul>
+                </div>
+
+            </div>
+            <!-- chỉ ra hướng phân tách cho từng bộ thay đổi(đường phân tách dọc) -->
+            <div class="resizer" data-direction="horizontal"></div>
+            <div class="container__right">
+                <!-- // tạo các phần tử -->
+
+                <div class="container__top" id="contentTable">
+                    <ul id="contextMenu" class="backdrop-blur">
+                        <li class="contextMenu-item" onclick="importFile()">
+                            <i class="fas fa-file-import"></i>
+                            <p class="contextMenu-text">Import</p>
+                        </li>
+                        <li class="contextMenu-item" onclick="exportFile()">
+                            <i class="fas fa-file-export"></i>
+                            <p class="contextMenu-text">Export</p>
+                        </li>
+                        <div class="hr"></div>
+                        <li class="contextMenu-item">
+                            <i class="fas fa-door-open"></i>
+                            <p class="contextMenu-text">Close</p>
+                        </li>
+                    </ul>
+
+                </div>
+                <div class="resizer" data-direction="vertical"></div>
+                <div class="container__bottom">
+                    <div class="bottomMenu">
+                        <div class="bottomMenu__container">
+                            <ul class="bottomMenu__left">
+                                <li class="bottomMenuLeft__item">Problems</li>
+                                <li class="bottomMenuLeft__item" href="#!output">Output</li>
+                                <li class="bottomMenuLeft__item" href="#!terminal">Terminal</li>
+                                <li class="bottomMenuLeft__item" href="#!debugconsole">Debug Console</li>
+                            </ul>
+                            <ul class="bottomMenu__right">
+                                <li class="bottomMenuRight__item"><i class="fas fa-sliders-h"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-unlock"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-angle-up"></i></li>
+                                <li class="bottomMenuRight__item"><i class="fas fa-times"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="statusBar">
+            <div class="statusBar__container">
+                <ul class="statusBar__left">
+                    <li class="sttBar__item"><i class="far fa-times-circle"></i></li>
+                    <li class="sttBar__item"><i class="fas fa-exclamation-triangle"></i></li>
+                </ul>
+                <ul class="statusBar__right">
+                    <li class="sttBar__item "><input type="range" id="rangeScale" onchange="rangeScale()" value=""
+                            min="50" max="100"></li>
+                    <li id="locationX" class="sttBar__item location">x:</li>
+                    <li id="locationY" class="sttBar__item location">y:</li>
+
+                    <li class="sttBar__item">UTF-8</li>
+                    <li class="sttBar__item">HTML</li>
+                    <li class="sttBar__item"><i class="fas fa-globe"></i> Go Live</li>
+                    <li class="sttBar__item"><i class="far fa-comment-dots"></i></li>
+                    <li class="sttBar__item"><i class="far fa-bell"></i></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const resizable = function (resizer) {
+                //truy xuất thuộc tính từ phần tử resizer, làm thanh dọc này kéo đc:
+                const direction = resizer.getAttribute('data-direction') || 'horizontal';
+                const prevSibling = resizer.previousElementSibling;
+                const nextSibling = resizer.nextElementSibling;
+
+                // The current position of mouse
+                let x = 0;
+                let y = 0;
+                let prevSiblingHeight = 0;
+                let prevSiblingWidth = 0;
+
+                // Xử lý sự kiện mousedown
+                // được kích hoạt khi người dùng kéo bộ chỉnh sửa
+                const mouseDownHandler = function (e) {
+                    // Lấy vị trí chuột hiện tại
+                    x = e.clientX;
+                    y = e.clientY;
+                    const rect = prevSibling.getBoundingClientRect();
+                    prevSiblingHeight = rect.height;
+                    prevSiblingWidth = rect.width;
+
+                    // Lắng nghe chuyển động của mouse
+                    //Đính kèm Listener vào `document`
+                    document.addEventListener('mousemove', mouseMoveHandler);
+                    document.addEventListener('mouseup', mouseUpHandler);
+                };
+
+                //cập nhật con trỏ của công cụ:
+                const mouseMoveHandler = function (e) {
+                    //xác định khoảng cách con chuột đã được di chuyển 
+                    const dx = e.clientX - x;
+                    const dy = e.clientY - y;
+
+                    switch (direction) {
+                        case 'vertical':
+                            //Chiều cao của các cạnh được đặt dựa trên số phần trăm chiều cao của parent.
+                            const h = (prevSiblingHeight + dy) * 100 / resizer.parentNode
+                                .getBoundingClientRect().height;
+                            prevSibling.style.height = `${h}%`;
+                            break;
+                        case 'horizontal':
+                        default:
+                            //Chiều rộng của các cạnh được đặt dựa trên số phần trăm chiều rộng của parent.
+                            const w = (prevSiblingWidth + dx) * 100 / resizer.parentNode
+                                .getBoundingClientRect().width;
+                            prevSibling.style.width = `${w}%`;
+                            break;
+                    }
+
+                    const cursor = direction === 'horizontal' ? 'col-resize' : 'row-resize';
+                    // đặt con trỏ cho toàn bộ trang.  //nếu k sẽ thấy màn hình nhấp nháy do con trỏ được thay đổi liên tục. k có cố định.
+                    resizer.style.cursor = cursor;
+                    document.body.style.cursor = cursor;
+
+                    //ngăn các sự kiện chuột và lựa chọn văn bản ở cả hai bên :giá trị none.
+                    prevSibling.style.userSelect = 'none';
+                    prevSibling.style.pointerEvents = 'none';
+
+                    nextSibling.style.userSelect = 'none';
+                    nextSibling.style.pointerEvents = 'none';
+                };
+
+                const mouseUpHandler = function () {
+                    resizer.style.removeProperty('cursor');
+                    document.body.style.removeProperty('cursor');
+
+                    prevSibling.style.removeProperty('user-select');
+                    prevSibling.style.removeProperty('pointer-events');
+
+                    nextSibling.style.removeProperty('user-select');
+                    nextSibling.style.removeProperty('pointer-events');
+
+                    // loại bỏ các trình xử lý của `mousemove` và `mouseup`:
+                    document.removeEventListener('mousemove', mouseMoveHandler);
+                    document.removeEventListener('mouseup', mouseUpHandler);
+                };
+
+                //  Đính kèm trình xử lý
+                resizer.addEventListener('mousedown', mouseDownHandler);
+            };
+
+            // Truy vấn tất cả các công cụ thay đổi kích thước:
+            document.querySelectorAll('.resizer').forEach(function (ele) {
+                resizable(ele);
+            });
+        });
+    </script>
+    <!-- My JS -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        var url_sakai = 'https://sakai-db.myworkspace.vn/api/db/common/inspect?schema_name=sakai';
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                data: {
+
+                },
+                url: url_sakai,
+                success: function (data) {
+                    console.log("Get Success");
+                    var key = Object.keys(data['sakai']);
+
+                    for (var i = 0; i <= key.length; i++) {
+                        var header = key[i];
+                        document.getElementById('listTable').innerHTML += '<button onClick="replyId(this)" class="list-item" id="' + i + '"  type="submit" >' + header + '</button>';
+                    }
+
+                    for (var i = 0; i < key.length; i++) {
+                        var header = key[i];
+
+                        document.getElementById('contentTable').innerHTML += '<div id="myTable' + i + '" class="myTable" style="display:none"><div class="headerTable"><h5 class="nameTable" id="nameTable' + i + '">' + header + '</h5><div class="menuTable" id="menuTable" ><i class="fas fa-ellipsis-h"></i></div><ul class="submenuTable backdrop-blur"><li class="contextMenu-item" onclick="importFile()"><i class="fas fa-file-import"></i><p class="contextMenu-text">Import</p></li> <li class="contextMenu-item" onclick="exportFile()"><i class="fas fa-file-export"></i><p class="contextMenu-text">Export</p></li><div class="hr"></div><li class="contextMenu-item" onlick="closeTable()"><i class="fas fa-door-open"></i><p class="contextMenu-text">Close</p></li></ul></div><div id="dataTable' + i + '" class="myTable_container"></div> <div id="myTable' + i + '_dot0" class="dot dot0"></div><div id="myTable' + i + '_dot1" class="dot dot1"></div><div id="myTable' + i + '_dot2" class="dot dot2"></div><div id="myTable' + i + '_dot3" class="dot dot3"></div><div id="myTable' + i + '_dot4" class="dot dot4"></div><div id="myTable' + i + '_dot5" class="dot dot5"></div><div id="myTable' + i + '_dot6" class="dot dot6"></div><div id="myTable' + i + '_dot7" class="dot dot7"></div>';
+                    }
+
+
+                    $(".list-item").click(function () {
+                        // Viết đoạn code để phát sinh dữ liệu động dựa vào idListTable.
+                        // Dữ liệu bao gồm div để thể hiện Table
+                        // Khi phát sinh dữ liệu động xong thì để lại div listTable dể dùng cho lần sau
+
+                        var idInput = this.id;
+                        var headerTT = key[idInput];
+                        var dataTable = data['sakai'][headerTT];
+
+                        /*  document.getElementById('contentTable').innerHTML *= '<div id="myTable' + idInput + 'class="myTable" style="display:block"> <h5 id="nameTable' + idInput + '">' + headerTT + '</h5> <div id="dataTable' + idInput + '" class="myTable_container"></div>'; */
+
+                        for (i = 0; i < dataTable.length; i++) {
+                            var myTableI = document.getElementById('myTable' + idInput);
+                            myTableI.style.display = "block";
+
+                            document.getElementById('nameTable' + idInput).innerHTML = headerTT;
+                            document.getElementById('dataTable' + idInput).innerHTML += '<div id="' + dataTable[i].name + '" class="dataItem">' + '<p>' + 'Name: ' + dataTable[i].name + '</p>' + '<hr  class="hr">' + '<p>' + 'Type: ' + dataTable[i].type + '</p>' + '</div>';
+                            // show DIV table0, table1...
+                        }
+                        dragElement(document.getElementById("myTable" + idInput));
+                        function dragElement(elmnt) {
+                            var pos1 = 0;
+                            var pos2 = 0;
+                            var pos3 = 0;
+                            var pos4 = 0;
+                            if (document.getElementById(elmnt.id)) {
+                                document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+                            } else {
+                                elmnt.onmousedown = dragMouseDown;
+                            }
+
+                            function dragMouseDown(e) {
+                                e = e || window.event;
+                                e.preventDefault();
+
+                                pos3 = e.clientX;
+                                pos4 = e.clientY;
+
+                                document.onmouseup = closeDragElement;
+                                document.onmousemove = elementDrag;
+                            }
+
+                            function elementDrag(e) {
+                                e = e || window.event;
+                                e.preventDefault();
+
+                                pos1 = pos3 - e.clientX;
+                                pos2 = pos4 - e.clientY;
+                                pos3 = e.clientX;
+                                pos4 = e.clientY;
+
+                                elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+                                elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+                                //Hiện tọa độ X, Y lên thanh StatusBar
+                                document.getElementById("locationX").innerHTML = elmnt.style.top;
+                                document.getElementById("locationY").innerHTML = elmnt.style.left;
+                                /* console.log('elmnt.style.top=' + elmnt.style.top);
+                                console.log('elmnt.style.left=' + elmnt.style.left); */
+
+                                myStorage = window.localStorage;
+                                myStorage.setItem('X_myTable' + idInput, (elmnt.offsetTop - pos2) + "px");
+                                myStorage.setItem('Y_myTable' + idInput, (elmnt.offsetLeft - pos1) + "px");
+                            }
+
+                            function closeDragElement() {
+                                document.onmouseup = null;
+                                document.onmousemove = null;
+                            }
+                        }
+                        window.onload = function () {
+                            var locationX = localStorage.getItem('X_myTable' + idInput);
+                            console.log('X_myTable =' + idInput + locationX);
+                            var locationY = localStorage.getItem('Y_myTable' + idInput);
+                            console.log('X_myTable =' + idInput + locationX);
+                            var myTable = document.getElementById('myTable' + idInput);
+                            if (locationX != "null" && locationX != "undefined" && locationY != "null" && locationY !=
+                                "undefined") {
+                                myTable.style.top = locationX;
+                                myTable.style.left = locationY;
+                                document.getElementById('X_myTable' + idInput).innerHTML = 'x: ' + locationX;
+                                document.getElementById('Y_myTable' + idInput).innerHTML = 'y: ' + locationY;
+                            } else {
+                                myTable.style.top = '0';
+                                myTable.style.left = '0';
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
+    </script>
+    <script src="js/app.js"></script>
+    <script>
+        function rangeScale() {
+            var rangeScale = document.getElementById('rangeScale');
+            var myTable = document.querySelectorAll('.myTable');
+            console.log(rangeScale);
+
+            rangeScale.value = value_rangeScale;
+            myTable.style.transform = 'scale(' + value_rangeScale + '%)';
+        }
+    </script>
+    <!-- <script>
+        /*  myContaxtMenu = document.querySelectorAll('.myTable');
+         /* myContaxtMenu.on("contextmenu", function (event) {
+             event.preventDefault();
+             var contextElement = document.getElementById('contextMenu');
+             contextElement.style.top = event.offsetY + "px";
+             contextElement.style.left = event.offsetX + "px";
+             contextElement.classList.add('active');
+         }); */
+        window.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+            var contextElement = document.getElementById('contextMenu');
+            contextElement.classList.add('active');
+            contextElement.style.top = event.offsetY + "px";
+            contextElement.style.left = event.offsetX + "px";
+        });
+        window.addEventListener("click", function () {
+            document.getElementById('contextMenu').classList.remove('active');
+        });
+    </script> -->
+    <script>
+        $(document).ready(function () {
+            $(this).on('click', '.menuTable', function () {
+                $(this).siblings().toggleClass('active');
+            });
+            $(this).on('click', ".submenuTable", function () {
+                $(".submenuTable").removeClass('active');
+
+            });
+
+        });
+        function importFile() {
+            console.log("Import File...");
+        }
+
+        function exportFile() {
+            console.log("Export File...");
+        }
+
+        function closeTable() {
+            console.log("Close Table...");
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".dataItem").on("mouseover", function () {
+                console.log("Đã vào cột = " + $(this).text());
+            });
+            $(".dataItem").on("mouseout", function () {
+                console.log("Đã ra ngoài!");
+            });
+        });
+    </script>
+</body>
+
+</html>

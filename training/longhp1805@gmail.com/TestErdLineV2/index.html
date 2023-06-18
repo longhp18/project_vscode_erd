@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Line</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div id="myTable1" class="myTable">
+            <div class="headerTable">
+                <div class="btn-close">
+                    <i class="fas fa-times close-icon"></i>
+                </div>
+                <h5 class="nameTable" id="nameTable">Bảng 1</h5>
+                <div class="menuTable">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+
+            <div id="dataTable" class="myTable_container">
+                <div id="dataTable0" class="myTable_container">
+                    <div id="CHANNEL_ID" class="dataItem">
+                        <div class="dot-group">
+                            <div class="dot dot-left" id="4" data-id="4"></div>
+                            <div class="dot dot-right" id="5" data-id="5"></div>
+                        </div>
+                        <p>Name: CHANNEL_ID</p>
+                        <hr class="hr">
+                        <p>Type: VARCHAR(255)</p>
+                    </div>
+                    <div id="NEXT_ID" class="dataItem">
+                        <div class="dot-group">
+                            <div class="dot dot-left" id="6" data-6="6"></div>
+                            <div class="dot dot-right" id="7" data-7="7"></div>
+                        </div>
+                        <p>Name: NEXT_ID</p>
+                        <hr class="hr">
+                        <p>Type: INTEGER</p>
+                    </div>
+                    <div id="XML" class="dataItem">
+                        <div class="dot-group">
+                            <div class="dot dot-left"></div>
+                            <div class="dot dot-right"></div>
+                        </div>
+                        <p>Name: XML</p>
+                        <hr class="hr">
+                        <p>Type: LONGTEXT</p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div id="myTable1_dot0" class="dot dot0"></div>
+            <div id="myTable1_dot1" class="dot dot1"></div>
+            <div id="myTable1_dot2" class="dot dot2"></div>
+            <div id="myTable1_dot3" class="dot dot3"></div>
+            <div id="myTable1_dot4" class="dot dot4"></div>
+            <div id="myTable1_dot5" class="dot dot5"></div>
+            <div id="myTable1_dot6" class="dot dot6"></div>
+            <div id="myTable1_dot7" class="dot dot7"></div> -->
+        </div>
+        <div id="myTable2" class="myTable">
+            <div class="headerTable">
+                <div class="btn-close">
+                    <i class="fas fa-times close-icon"></i>
+                </div>
+                <h5 class="nameTable" id="nameTable">Bảng 2</h5>
+                <div class="menuTable">
+                    <i class="fas fa-ellipsis-h"></i>
+                </div>
+            </div>
+            <div id="dataTable" class="myTable_container">
+                <div id="dataTable8" class="myTable_container">
+                    <div id="ASSIGNMENT_ID" class="dataItem">
+                        <div class="dot-group">
+                            <div class="dot dot-left" id="0" data-0="0"></div>
+                            <div class="dot dot-right" id="1" data-1="1"></div>
+                        </div>
+                        <p>Name: ASSIGNMENT_ID</p>
+                        <hr class="hr">
+                        <p>Type: VARCHAR(255)</p>
+                    </div>
+                    <div id="SHOW_TO" class="dataItem">
+                        <div class="dot-group">
+                            <div class="dot dot-left" id="2" data-2="2"></div>
+                            <div class="dot dot-right" id="3" data-3="3"></div>
+                        </div>
+                        <p>Name: SHOW_TO</p>
+                        <hr class="hr">
+                        <p>Type: INTEGER</p>
+                    </div>
+                    <div id="TEXT" class="dataItem">
+                        <div class="dot-group">
+                            <div class="dot dot-left"></div>
+                            <div class="dot dot-right"></div>
+                        </div>
+                        <p>Name: TEXT</p>
+                        <hr class="hr">
+                        <p>Type: LONGTEXT</p>
+                    </div>
+                    <div id="ID" class="dataItem">
+                        <div class="dot-group">
+                            <div class="dot dot-left"></div>
+                            <div class="dot dot-right"></div>
+                        </div>
+                        <p>Name: ID</p>
+                        <hr class="hr">
+                        <p>Type: BIGINT</p>
+                    </div>
+                </div>
+            </div>
+            <!-- <div id="myTable2_dot0" class="dot dot0"></div>
+            <div id="myTable2_dot1" class="dot dot1"></div>
+            <div id="myTable2_dot2" class="dot dot2"></div>
+            <div id="myTable2_dot3" class="dot dot3"></div>
+            <div id="myTable2_dot4" class="dot dot4"></div>
+            <div id="myTable2_dot5" class="dot dot5"></div>
+            <div id="myTable2_dot6" class="dot dot6"></div>
+            <div id="myTable2_dot7" class="dot dot7"></div> -->
+        </div>
+        <svg id="svg">
+            <line id="line" />
+        </svg>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    /* $(document).ready(function () {
+        $(".dataItem").on("mouseover", function () {
+            console.log("Đã vào cột ==> " + $(this).text());
+        });
+        $(".dataItem").on("mouseout", function () {
+            console.log("Đã ra ngoài côt!");
+        });
+    }); */
+</script>
+<script>
+    $(document).ready(function () {
+        /* $(".dot").on("mouseover", function (event) {
+            event.target.style.color = "purple";
+            console.log(JSON.stringify(event.id));
+            console.log("Đã vào Point ==> " + $(this).id);
+        }); */
+        $(".dot")
+            .click(function (event) {
+                /* console.log(JSON.stringify(event)); */
+                console.log("Đã vào Point: " + $(this).attr("data-id"));
+            })
+            .mouseout(function () {
+                console.log("Đã rời Point: " + $(this).attr("data-id"));
+            });
+        /*  $(".dot").on("mouseout", function () {
+             console.log("Đã ra ngoài Point!" + $(this).id);
+         }); */
+    });
+</script>
+<!-- <script>
+    /* $(document).ready(function () { */
+       document.getElementById("dot").on("mouseover", function (event) {
+            console.log(event);
+            console.log("Đã vào Point ==> " + $(this).id);
+        });
+        $(".dot").on("mouseout", function () {
+            console.log("Đã ra ngoài Point!" + $(this).id);
+        });
+    /* }); */
+</script>
+ -->
+
+</html>

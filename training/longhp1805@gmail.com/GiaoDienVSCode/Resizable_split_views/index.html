@@ -1,0 +1,120 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Cập nhật chiều rộng của phía bên trái khi kéo phần tử chỉnh lại</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/demo.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter&family=Source+Code+Pro&display=swap">
+    <style>
+    .container {
+        display: flex;
+        /* Để đặt các phần tử bên trái, bộ chỉnh lại và bên phải trong cùng một hàng.
+        /* Khác */
+        border: 1px solid #cbd5e0;
+        height: 16rem;
+        width: 100%;
+    }
+    .container__left {
+        /* // Ban đầu, bên trái chiếm 3/4 chiều rộng * / */
+        width: 75%;
+
+        /* Khác */
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    .resizer {
+        background-color: #cbd5e0;
+        cursor: ew-resize;
+        height: 100%;
+        width: 2px;
+    }
+    .container__right {
+        /* Lấy chiều rộng còn lại */
+        flex: 1;
+
+        /* Khác */
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    </style>
+</head>
+<body> 
+    <!-- tạo phần tử -->
+    <div class="container">
+        <div class="container__left">Left</div>
+        <div class="resizer" id="dragMe"></div>
+        <div class="container__right">Right</div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Truy vấn phần tử
+    const resizer = document.getElementById('dragMe');
+    const leftSide = resizer.previousElementSibling;
+    const rightSide = resizer.nextElementSibling;
+
+    // tọa độ vị trí hiện tại của chuột
+    let x = 0;
+    let y = 0;
+   // Chiều rộng của mặt bên trái.
+    let leftWidth = 0;
+
+     // Xử lý sự kiện mousedown
+     // được kích hoạt khi người dùng kéo bộ chỉnh sửa
+    const mouseDownHandler = function(e) {
+        // Lấy vị trí chuột hiện tại
+        x = e.clientX;
+        y = e.clientY;
+        leftWidth = leftSide.getBoundingClientRect().width;
+
+        // Lắng nghe chuyển động của mouse
+        //Đính kèm Listener vào `document`
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    };
+
+      //cập nhật con trỏ của công cụ:
+    const mouseMoveHandler = function(e) {
+        //xác định khoảng cách con chuột đã được di chuyển 
+        const dx = e.clientX - x;
+        const dy = e.clientY - y;
+        
+        //Chiều rộng của cạnh trái được đặt dựa trên số phần trăm chiều rộng của parent.
+        const newLeftWidth = (leftWidth + dx) * 100 / resizer.parentNode.getBoundingClientRect().width;
+        leftSide.style.width = `${newLeftWidth}%`;
+
+        resizer.style.cursor = 'col-resize';
+        // $$ đặt con trỏ cho toàn bộ trang.  //nếu k sẽ thấy màn hình nhấp nháy do con trỏ được thay đổi liên tục
+        document.body.style.cursor = 'col-resize';
+       //ngăn các sự kiện chuột và lựa chọn văn bản ở cả hai bên :giá trị none.
+        leftSide.style.userSelect = 'none';
+        leftSide.style.pointerEvents = 'none';
+      
+        rightSide.style.userSelect = 'none';
+        rightSide.style.pointerEvents = 'none';
+    };
+    //$$ khi user ngừng di chuyen chuột, dính với thanh kéo. k di chuyển chuột đc trên màn hình.
+    const mouseUpHandler = function() {
+        resizer.style.removeProperty('cursor');
+        document.body.style.removeProperty('cursor');
+
+        leftSide.style.removeProperty('user-select');
+        leftSide.style.removeProperty('pointer-events');
+
+        rightSide.style.removeProperty('user-select');
+        rightSide.style.removeProperty('pointer-events');
+
+        // loại bỏ các trình xử lý của `mousemove` và `mouseup`
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    // Đính kèm trình xử lý
+    resizer.addEventListener('mousedown', mouseDownHandler);
+});
+</script>
+</body>
+</html>

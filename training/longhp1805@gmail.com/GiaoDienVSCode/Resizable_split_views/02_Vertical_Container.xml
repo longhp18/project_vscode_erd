@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron" modified="2021-06-16T05:32:25.707Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/14.6.13 Chrome/89.0.4389.128 Electron/12.0.7 Safari/537.36" etag="qkmA8XWGlLFFk0VXwLOL" version="14.6.13" type="device">
+  <diagram id="NJNpc5mABo9xSiG1-kW2" name="Page-1">
+    <mxGraphModel dx="1086" dy="806" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="D8fePtvSVx4TYlcnGgNE-1" value="Table ABC" style="swimlane;" vertex="1" parent="1">
+          <mxGeometry x="320" y="310" width="200" height="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
+

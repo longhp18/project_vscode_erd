@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    <div id="myTable1" class="myTable">
+        <h5 class="nameTable" id="nameTable">Bảng 1</h5>
+        <div id="dataTable" class="myTable_container"></div>
+        <div id="myTable1_dot0" class="dot dot0"></div>
+        <div id="myTable1_dot1" class="dot dot1"></div>
+        <div id="myTable1_dot2" class="dot dot2"></div>
+        <div id="myTable1_dot3" class="dot dot3"></div>
+        <div id="myTable1_dot4" class="dot dot4"></div>
+        <div id="myTable1_dot5" class="dot dot5"></div>
+        <div id="myTable1_dot6" class="dot dot6"></div>
+        <div id="myTable1_dot7" class="dot dot7"></div>
+    </div>
+    <div id="myTable2" class="myTable">
+        <h5 class="nameTable" id="nameTable">Bảng 2</h5>
+        <div id="dataTable" class="myTable_container"></div>
+        <div id="myTable2_dot0" class="dot dot0"></div>
+        <div id="myTable2_dot1" class="dot dot1"></div>
+        <div id="myTable2_dot2" class="dot dot2"></div>
+        <div id="myTable2_dot3" class="dot dot3"></div>
+        <div id="myTable2_dot4" class="dot dot4"></div>
+        <div id="myTable2_dot5" class="dot dot5"></div>
+        <div id="myTable2_dot6" class="dot dot6"></div>
+        <div id="myTable2_dot7" class="dot dot7"></div>
+    </div>
+    <svg id="svg">
+        <line id="line" />
+    </svg>
+    <!-- <ul id="contextMenu">
+        <li class="contextMenu-item">
+            <i class="fas fa-file-import"></i>
+            <p class="contextMenu-text">Import</p>
+        </li>
+        <li class="contextMenu-item">
+            <i class="fas fa-file-export"></i>
+            <p class="contextMenu-text">Export</p>
+        </li>
+        <div class="hr"></div>
+        <li class="contextMenu-item">
+            <i class="fas fa-door-open"></i>
+            <p class="contextMenu-text">Exit</p>
+        </li>
+    </ul> -->
+</body>
+<script src="js/app.js"></script>
+<!-- <script>
+
+    // Make the DIV element draggable:
+    dragElement(document.getElementById("myTable1"));
+
+    function dragElement(elmnt) {
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById(elmnt.id)) {
+            // if present, the header is where you move the DIV from:
+            document.getElementById(elmnt.id).onmousedown = dragMouseDown;
+        } else {
+            // otherwise, move the DIV from anywhere inside the DIV:
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            // stop moving when mouse button is released:
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+</script> -->
+
+<script>
+    var line = $('#line');
+    var dot0 = $('#myTable1_dot3');
+    var dot1 = $('#myTable2_dot7');
+
+    var x1 = dot0.offset().left + (dot0.width() / 2);
+    var y1 = dot0.offset().top + (dot0.height() / 2);
+    var x2 = dot1.offset().left + (dot1.width() / 2);
+    var y2 = dot1.offset().top + (dot1.height() / 2);
+
+    line.attr('x1', x1).attr('y1', y1).attr('x2', x2).attr('y2', y2);
+
+
+</script>
+<!-- <script>
+    window.addEventListener("contextmenu", function (event) {
+        event.preventDefault();
+        var contextElement = document.getElementById('contextMenu');
+        contextElement.style.display = "block";
+        contextElement.style.top = event.offsetY + "px";
+        contextElement.style.left = event.offsetX + "px";
+    })
+</script> -->
+
+</html>

@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>HTML DOM - Create resizable split views</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/demo.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter&family=Source+Code+Pro&display=swap">
+    <style>
+    .container {
+        display: flex;
+        /* Để đặt các phần tử bên trái, bộ chỉnh lại và bên phải trong cùng một hàng.
+        /* Khác */
+        border: 1px solid #cbd5e0;
+        height: 16rem;
+        width: 100%;
+    }
+    .container__left {
+        /* // Ban đầu, bên trái chiếm 3/4 chiều rộng * / */
+        width: 75%;
+
+        /* Khác */
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    .resizer {
+        background-color: #cbd5e0;
+        cursor: ew-resize;
+        height: 100%;
+        width: 2px;
+    }
+    .container__right {
+        /* Lấy chiều rộng còn lại */
+        flex: 1;
+
+        /* Khác */
+        align-items: center;
+        display: flex;
+        justify-content: center;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="container__left">Left</div>
+        <div class="resizer" id="dragMe"></div>
+        <div class="container__right">Right</div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Truy vấn phần tử
+    const prevSibling = resizer.previousElementSibling;
+   let prevSiblingHeight = 0;
+
+     // Xử lý sự kiện mousedown
+     // được kích hoạt khi người dùng kéo bộ chỉnh sửa
+    const mouseDownHandler = function(e) {
+        const rect = prevSibling.getBoundingClientRect();
+        prevSiblingHeight = rect.height;
+
+    };
+
+      //cập nhật con trỏ của công cụ:
+    const mouseMoveHandler = function(e) {
+        //xác định khoảng cách con chuột đã được di chuyển 
+    const h = (prevSiblingHeight + dy) * 100 / resizer.parentNode.getBoundingClientRect().height;
+    prevSibling.style.height = `${h}%`;
+    resizer.style.cursor = 'row-resize';
+    document.body.style.cursor = 'row-resize';
+
+
+      
+    };
+    
+
+        // Remove the handlers of `mousemove` and `mouseup`
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    // Đính kèm trình xử lý
+    resizer.addEventListener('mousedown', mouseDownHandler);
+});
+</script>
+</body>
+</html>
